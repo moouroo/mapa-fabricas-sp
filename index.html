@@ -7,172 +7,484 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 :root{--navy:#153b56;--blue:#1769aa;--teal:#148477;--ink:#172b3a;--muted:#607383;--paper:#f3f7fa;--line:#d9e4eb}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}
 header{background:linear-gradient(120deg,#123b5d,#1769aa);color:#fff;padding:22px clamp(16px,4vw,42px) 20px}
 .head-inner{max-width:1500px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
 .kicker{text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;font-weight:800;color:#b9e4f6;margin-bottom:7px}
-h1{font-size:clamp(1.45rem,3vw,2.2rem);line-height:1.12;margin:0 0 8px;letter-spacing:-.025em}header p{margin:0;color:#e0edf6;max-width:760px;line-height:1.5}.header-mark{flex:0 0 auto;width:62px;height:62px;border:1px solid #ffffff55;border-radius:18px;display:grid;place-items:center;background:#ffffff14;font-size:1.8rem}
-main{max-width:1500px;margin:auto;padding:18px clamp(10px,2vw,24px) 12px}.intro{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:12px}.intro strong{font-size:1rem}.intro span{font-size:.88rem;color:var(--muted)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.district-btn,.search-btn{border:1px solid var(--line);background:#fff;color:var(--navy);padding:10px 14px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer;box-shadow:0 2px 6px #16364b08}.district-btn:hover,.search-btn:hover{border-color:#86b6d3;background:#f5fbff}.district-btn:focus-visible,.search-btn:focus-visible,input:focus-visible{outline:3px solid #8ac7e8;outline-offset:2px}.district-btn.active{background:#e1f2fb;border-color:#86c5e8;color:#075985}
-.search-row{display:flex;gap:8px;flex:1;min-width:min(100%,320px)}.search-row input{min-width:0;flex:1;padding:10px 13px;border:1px solid #cbd8e1;border-radius:10px;font:inherit;background:white}.search-btn{border-radius:10px;white-space:nowrap}
-.map-shell{position:relative;background:#dcecf3;border:1px solid #d0dfe8;border-radius:18px;overflow:hidden;box-shadow:0 12px 34px #18384b12}#map{height:min(72vh,820px);min-height:470px;width:100%;background:#dcecf3}.map-badge{position:absolute;z-index:500;left:14px;top:14px;max-width:calc(100% - 28px);background:#ffffffed;border:1px solid #d8e5ed;border-radius:12px;padding:10px 13px;box-shadow:0 4px 18px #16364b14;pointer-events:none}.map-badge b{display:block;font-size:.9rem;color:var(--navy)}.map-badge small{display:block;color:var(--muted);margin-top:2px}.status{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 2px 4px;color:var(--muted);font-size:.88rem}.legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.legend-item{display:inline-flex;align-items:center;gap:7px}.legend-dot{width:10px;height:10px;border-radius:50%;background:#1769aa;display:inline-block}.legend-photo{width:18px;height:18px;border-radius:5px;border:2px solid #fff;box-shadow:0 0 0 1px #1769aa;background:#cce5f4;display:inline-block}.footnote{font-size:.8rem;color:#6b7d8b;line-height:1.5;margin:8px 2px 18px}.leaflet-popup-content{margin:14px;min-width:240px;max-width:400px}.popup-thumb{display:block;width:100%;max-width:400px;height:280px;object-fit:contain;border-radius:8px;margin:0 0 12px;background:#edf3f7;cursor:pointer}.gallery-hint{font-size:.78rem;color:#607383;margin:-5px 0 10px}.gallery-count{font-weight:800;color:#1769aa}.popup-title{font-size:1rem;font-weight:800;color:#153b56;margin-bottom:4px}.popup-address{font-size:.84rem;color:#536b7c;margin-bottom:8px}.popup-link{display:inline-block;color:#1769aa;font-weight:700;text-decoration:none}.popup-link:hover{text-decoration:underline}.photo-marker{background:transparent;border:0}.photo-marker img{display:block;width:42px;height:42px;object-fit:cover;border:3px solid white;border-radius:12px;box-shadow:0 3px 12px #0f2f4666;background:#dcecf3}.district-label{background:#153b56;color:#fff;border:2px solid #fff;border-radius:7px;padding:4px 7px;font-size:12px;font-weight:800;white-space:nowrap;box-shadow:0 2px 8px #102c4033}.empty-state{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:#51697a;font-size:.9rem;line-height:1.5}.empty-state b{color:var(--navy)}
-@media(max-width:620px){header{padding-top:18px}.header-mark{width:48px;height:48px;font-size:1.4rem;border-radius:14px}main{padding:12px 9px}#map{min-height:430px;height:68vh}.search-row{width:100%}.district-btn{flex:1;padding:9px 10px;font-size:.88rem}.map-badge{left:8px;top:8px;padding:8px 10px}}
+h1{font-size:clamp(1.45rem,3vw,2.2rem);line-height:1.12;margin:0 0 8px;letter-spacing:-.025em}
+header p{margin:0;color:#e0edf6;max-width:760px;line-height:1.5}
+.header-mark{flex:0 0 auto;width:62px;height:62px;border:1px solid #ffffff55;border-radius:18px;display:grid;place-items:center;background:#ffffff14;font-size:1.8rem}
+main{max-width:1500px;margin:auto;padding:18px clamp(10px,2vw,24px) 12px}
+.intro{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.intro strong{font-size:1rem}
+.intro span{font-size:.88rem;color:var(--muted)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.district-btn,.search-btn{border:1px solid var(--line);background:#fff;color:var(--navy);padding:10px 14px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer;box-shadow:0 2px 6px #16364b08}
+.district-btn:hover,.search-btn:hover{border-color:#86b6d3;background:#f5fbff}
+.district-btn:focus-visible,.search-btn:focus-visible,input:focus-visible{outline:3px solid #8ac7e8;outline-offset:2px}
+.district-btn.active{background:#e1f2fb;border-color:#86c5e8;color:#075985}
+.search-row{display:flex;gap:8px;flex:1;min-width:min(100%,320px)}
+.search-row input{min-width:0;flex:1;padding:10px 13px;border:1px solid #cbd8e1;border-radius:10px;font:inherit;background:white}
+.search-btn{border-radius:10px;white-space:nowrap}
+.map-shell{position:relative;background:#dcecf3;border:1px solid #d0dfe8;border-radius:18px;overflow:hidden;box-shadow:0 12px 34px #18384b12}
+#map{height:min(72vh,820px);min-height:470px;width:100%;background:#dcecf3}
+.map-badge{position:absolute;z-index:500;left:14px;top:14px;max-width:calc(100% - 28px);background:#ffffffed;border:1px solid #d8e5ed;border-radius:12px;padding:10px 13px;box-shadow:0 4px 18px #16364b14;pointer-events:none}
+.map-badge b{display:block;font-size:.9rem;color:var(--navy)}
+.map-badge small{display:block;color:var(--muted);margin-top:2px}
+.status{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 2px 4px;color:var(--muted);font-size:.88rem}
+.legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.legend-item{display:inline-flex;align-items:center;gap:7px}
+.legend-dot{width:10px;height:10px;border-radius:50%;background:#1769aa;display:inline-block}
+.legend-photo{width:18px;height:18px;border-radius:5px;border:2px solid #fff;box-shadow:0 0 0 1px #1769aa;background:#cce5f4;display:inline-block}
+.footnote{font-size:.8rem;color:#6b7d8b;line-height:1.5;margin:8px 2px 18px}
+.leaflet-popup-content{margin:14px;min-width:240px;max-width:400px}
+.popup-thumb{display:block;width:100%;max-width:400px;height:280px;object-fit:contain;border-radius:8px;margin:0 0 12px;background:#edf3f7;cursor:pointer}
+.popup-video{display:block;width:100%;max-width:400px;height:280px;border:0;border-radius:8px;margin:0 0 12px;background:#edf3f7}
+.gallery-controls{display:flex;align-items:center;gap:10px;margin:-3px 0 10px}
+.gallery-next{border:1px solid #cbd8e1;background:#f5fbff;color:#1769aa;border-radius:7px;padding:6px 10px;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer}
+.gallery-next:hover{background:#e1f2fb}
+.gallery-hint{font-size:.78rem;color:#607383;margin:-5px 0 10px}
+.gallery-count{font-weight:800;color:#1769aa}
+.popup-title{font-size:1rem;font-weight:800;color:#153b56;margin-bottom:4px}
+.popup-address{font-size:.84rem;color:#536b7c;margin-bottom:8px}
+.popup-link{display:inline-block;color:#1769aa;font-weight:700;text-decoration:none}
+.popup-link:hover{text-decoration:underline}
+.photo-marker{background:transparent;border:0}
+.photo-marker img{display:block;width:42px;height:42px;object-fit:cover;border:3px solid white;border-radius:12px;box-shadow:0 3px 12px #0f2f4666;background:#dcecf3}
+.district-label{background:#153b56;color:#fff;border:2px solid #fff;border-radius:7px;padding:4px 7px;font-size:12px;font-weight:800;white-space:nowrap;box-shadow:0 2px 8px #102c4033}
+.empty-state{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:#51697a;font-size:.9rem;line-height:1.5}
+.empty-state b{color:var(--navy)}
+@media(max-width:620px){
+  header{padding-top:18px}
+  .header-mark{width:48px;height:48px;font-size:1.4rem;border-radius:14px}
+  main{padding:12px 9px}
+  #map{min-height:430px;height:68vh}
+  .search-row{width:100%}
+  .district-btn{flex:1;padding:9px 10px;font-size:.88rem}
+  .map-badge{left:8px;top:8px;padding:8px 10px}
+}
 </style>
 </head>
 <body>
-<header><div class="head-inner"><div><div class="kicker">Atlas escolar • São Paulo</div><h1>Mapa colaborativo dos bairros</h1><p>Vila Carrão, Tatuapé e Belém — explore as ruas, aproxime o mapa e consulte os registros fotográficos dos alunos.</p></div><div class="header-mark" aria-hidden="true">⌖</div></div></header>
+<header>
+  <div class="head-inner">
+    <div>
+      <div class="kicker">Atlas escolar • São Paulo</div>
+      <h1>Mapa colaborativo dos bairros</h1>
+      <p>Vila Carrão, Tatuapé e Belém — explore as ruas, aproxime o mapa e consulte fotos e vídeos enviados pelos alunos.</p>
+    </div>
+    <div class="header-mark" aria-hidden="true">⌖</div>
+  </div>
+</header>
+
 <main>
-  <div class="intro"><strong>Explore o território</strong><span>Arraste o mapa · use a roda do mouse ou os botões +/− para dar zoom</span></div>
+  <div class="intro">
+    <strong>Explore o território</strong>
+    <span>Arraste o mapa · use a roda do mouse ou os botões +/− para dar zoom</span>
+  </div>
+
   <div class="controls" aria-label="Controles do mapa">
     <button class="district-btn active" data-district="todos" type="button">Ver os 3 bairros</button>
     <button class="district-btn" data-district="vila-carrao" type="button">Vila Carrão</button>
     <button class="district-btn" data-district="tatuape" type="button">Tatuapé</button>
     <button class="district-btn" data-district="belem" type="button">Belém</button>
-    <form class="search-row" id="searchForm" role="search"><input id="addressSearch" type="search" placeholder="Buscar rua ou endereço…" aria-label="Buscar rua ou endereço"><button class="search-btn" type="submit">Buscar</button></form>
+    <form class="search-row" id="searchForm" role="search">
+      <input id="addressSearch" type="search" placeholder="Buscar rua ou endereço…" aria-label="Buscar rua ou endereço">
+      <button class="search-btn" type="submit">Buscar</button>
+    </form>
   </div>
-  <section class="map-shell" aria-label="Mapa interativo dos bairros"><div class="map-badge"><b>Vila Carrão · Tatuapé · Belém</b><small id="mapHint">Mapa de ruas com zoom e navegação</small></div><div id="map" role="application" aria-label="Mapa interativo de ruas da zona leste de São Paulo"></div></section>
-  <div class="status"><div class="legend"><span class="legend-item"><i class="legend-dot"></i> Área de estudo</span><span class="legend-item"><i class="legend-photo"></i> Trabalho com foto (quando conectado)</span></div><span id="statusText" aria-live="polite">Mapa carregado.</span></div>
-  <div class="empty-state" id="dataNote"><b>Espaço preparado para os trabalhos dos alunos.</b> Os marcadores com miniaturas aparecerão quando este mapa for conectado ao formulário e à fonte de dados. Por enquanto, o mapa e a busca de ruas já funcionam.</div>
+
+  <section class="map-shell" aria-label="Mapa interativo dos bairros">
+    <div class="map-badge">
+      <b>Vila Carrão · Tatuapé · Belém</b>
+      <small id="mapHint">Mapa de ruas com zoom e navegação</small>
+    </div>
+    <div id="map" role="application" aria-label="Mapa interativo de ruas da zona leste de São Paulo"></div>
+  </section>
+
+  <div class="status">
+    <div class="legend">
+      <span class="legend-item"><i class="legend-dot"></i> Área de estudo</span>
+      <span class="legend-item"><i class="legend-photo"></i> Trabalho com foto ou vídeo</span>
+    </div>
+    <span id="statusText" aria-live="polite">Mapa carregado.</span>
+  </div>
+
+  <div class="empty-state" id="dataNote">
+    <b>Espaço preparado para os trabalhos dos alunos.</b>
+    Os marcadores com fotos e vídeos aparecerão quando este mapa for conectado ao formulário e à fonte de dados. Por enquanto, o mapa e a busca de ruas já funcionam.
+  </div>
+
   <p class="footnote">Mapa de ruas fornecido pela camada World Street Map da Esri. A disponibilidade depende do serviço externo e da conexão com a internet.</p>
 </main>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 'use strict';
 
-// Mapa base: usamos a camada World Street Map da Esri em vez do servidor
-// volunteer-run do OpenStreetMap que estava devolvendo erro 403 neste ambiente.
-// A camada inclui nomes de ruas e permite zoom; requer conexão com a internet.
-const map = L.map('map', { zoomControl: true, scrollWheelZoom: true, worldCopyJump: false }).setView([-23.5487, -46.5585], 13);
-const baseMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-  minZoom: 10, maxZoom: 19,
-  attribution: 'Tiles &copy; <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a> — fontes cartográficas indicadas pela Esri'
-}).addTo(map);
+// Mapa base: camada World Street Map da Esri.
+const map = L.map('map', {
+  zoomControl: true,
+  scrollWheelZoom: true,
+  worldCopyJump: false
+}).setView([-23.5487, -46.5585], 13);
+
+const baseMap = L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+  {
+    minZoom: 10,
+    maxZoom: 19,
+    attribution: 'Tiles &copy; <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a> — fontes cartográficas indicadas pela Esri'
+  }
+).addTo(map);
+
 baseMap.on('tileerror', () => {
-  document.getElementById('statusText').textContent = 'A camada de ruas não carregou. Verifique a conexão ou se a rede bloqueia o serviço cartográfico.';
+  document.getElementById('statusText').textContent =
+    'A camada de ruas não carregou. Verifique a conexão ou se a rede bloqueia o serviço cartográfico.';
 });
+
 baseMap.on('load', () => {
   document.getElementById('statusText').textContent = 'Mapa de ruas carregado.';
 });
 
-// Centros aproximados para navegação rápida. Os botões ajustam o enquadramento.
+// Centros aproximados para navegação rápida.
 const districts = {
-  'todos': { label: 'Os três bairros', center: [-23.5487, -46.5585], zoom: 13, bounds: [[-23.585, -46.615], [-23.510, -46.505]] },
-  'vila-carrao': { label: 'Vila Carrão', center: [-23.5620, -46.5360], zoom: 14 },
-  'tatuape': { label: 'Tatuapé', center: [-23.5400, -46.5760], zoom: 14 },
-  'belem': { label: 'Belém', center: [-23.5350, -46.5890], zoom: 14 }
+  'todos': {
+    label: 'Os três bairros',
+    center: [-23.5487, -46.5585],
+    zoom: 13,
+    bounds: [[-23.585, -46.615], [-23.510, -46.505]]
+  },
+  'vila-carrao': {
+    label: 'Vila Carrão',
+    center: [-23.5620, -46.5360],
+    zoom: 14
+  },
+  'tatuape': {
+    label: 'Tatuapé',
+    center: [-23.5400, -46.5760],
+    zoom: 14
+  },
+  'belem': {
+    label: 'Belém',
+    center: [-23.5350, -46.5890],
+    zoom: 14
+  }
 };
+
 const districtLabels = L.layerGroup().addTo(map);
+
 [
   {name:'Vila Carrão', point:[-23.5620,-46.5360]},
   {name:'Tatuapé', point:[-23.5400,-46.5760]},
   {name:'Belém', point:[-23.5350,-46.5890]}
-].forEach(d => L.marker(d.point, {
-  interactive:false,
-  icon:L.divIcon({className:'', html:'<span class="district-label">'+d.name+'</span>', iconSize:null, iconAnchor:[25,12]})
-}).addTo(districtLabels));
+].forEach(d => {
+  L.marker(d.point, {
+    interactive: false,
+    icon: L.divIcon({
+      className: '',
+      html: '<span class="district-label">' + d.name + '</span>',
+      iconSize: null,
+      iconAnchor: [25,12]
+    })
+  }).addTo(districtLabels);
+});
 
 // Dados publicados pelo Apps Script.
 const DATA_URL = 'https://script.google.com/macros/s/AKfycbwS2mVHT8VtZoz1Sq-0r09CbGKbpmRWfilNcuQ1pRiZV4lqVMnVFqBDN61dzESPaDp4SQ/exec?dados=1';
+
 const worksLayer = L.layerGroup().addTo(map);
 
 function escapeHTML(value) {
-  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  return String(value ?? '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[c]));
 }
+
 const photoGroups = new Map();
 let nextGroupId = 1;
+
+// Cria o conteúdo para exibição de uma foto ou vídeo.
+function mediaMarkup(item, groupId, index, total) {
+  if (item.tipoArquivo === 'video') {
+    const preview = drivePreviewUrl(item.fileUrl);
+
+    if (preview) {
+      return '<iframe class="popup-video" src="' + escapeHTML(preview) +
+        '" title="Vídeo enviado pelos alunos" ' +
+        'allow="autoplay; encrypted-media; picture-in-picture" ' +
+        'allowfullscreen loading="lazy"></iframe>';
+    }
+
+    return '<div class="popup-address">Este vídeo não pode ser exibido aqui. Use o link para abri-lo.</div>';
+  }
+
+  if (item.imageUrl) {
+    return '<img class="popup-thumb" id="gallery-image-' + groupId +
+      '" src="' + escapeHTML(item.imageUrl) +
+      '" alt="Foto ' + (index + 1) + ' de ' + total +
+      '; use Próximo arquivo para avançar" loading="lazy">';
+  }
+
+  return '<div class="popup-address">Não foi possível exibir este arquivo.</div>';
+}
+
+// Cria a janela que abre ao clicar em um marcador.
 function makePopup(group) {
   const first = group.photos[0] || {};
   const title = escapeHTML(first.title || 'Fábrica sem nome');
   const address = escapeHTML(group.address || 'Endereço não informado');
-  const image = first.imageUrl ? '<img class="popup-thumb" id="gallery-image-'+group.id+'" src="'+escapeHTML(first.imageUrl)+'" alt="Foto da fábrica; clique para ver a próxima" title="Clique na foto para ver a próxima" onclick="advanceFactoryPhoto('+group.id+')">' : '<div class="popup-address">Nenhuma foto disponível neste registro.</div>';
-  const count = group.photos.length > 1 ? '<div class="gallery-hint">Clique na foto para avançar · <span class="gallery-count" id="gallery-count-'+group.id+'">1 de '+group.photos.length+'</span></div>' : '';
-  const student = '<div class="popup-address" id="gallery-student-'+group.id+'">'+(first.student ? 'Enviado por: '+escapeHTML(first.student) : 'Registro fotográfico')+(first.date ? ' · '+escapeHTML(first.date) : '')+'</div>';
-  const link = first.fileUrl ? '<a class="popup-link" id="gallery-link-'+group.id+'" href="'+escapeHTML(first.fileUrl)+'" target="_blank" rel="noopener">Abrir foto original ↗</a>' : '';
-  return '<div id="gallery-'+group.id+'">'+image+count+'<div class="popup-title">'+title+'</div><div class="popup-address">'+address+'</div>'+student+link+'</div>';
+
+  const media = group.photos.length
+    ? mediaMarkup(first, group.id, 0, group.photos.length)
+    : '<div class="popup-address">Nenhuma foto ou vídeo disponível neste registro.</div>';
+
+  const count = group.photos.length > 1
+    ? '<div class="gallery-controls">' +
+        '<span class="gallery-hint">' +
+          '<span class="gallery-count" id="gallery-count-' + group.id + '">1 de ' + group.photos.length + '</span>' +
+        '</span>' +
+        '<button class="gallery-next" type="button" onclick="advanceFactoryPhoto(' + group.id + ')">Próximo arquivo ›</button>' +
+      '</div>'
+    : '';
+
+  const student =
+    '<div class="popup-address" id="gallery-student-' + group.id + '">' +
+    (first.student ? 'Enviado por: ' + escapeHTML(first.student) : 'Registro de aluno') +
+    (first.date ? ' · ' + escapeHTML(first.date) : '') +
+    '</div>';
+
+  const linkLabel = first.tipoArquivo === 'video'
+    ? 'Abrir vídeo original ↗'
+    : 'Abrir foto original ↗';
+
+  const link = first.fileUrl
+    ? '<a class="popup-link" id="gallery-link-' + group.id +
+      '" href="' + escapeHTML(first.fileUrl) +
+      '" target="_blank" rel="noopener">' + linkLabel + '</a>'
+    : '';
+
+  return '<div id="gallery-' + group.id + '">' +
+    '<div id="gallery-media-' + group.id + '">' + media + '</div>' +
+    count +
+    '<div class="popup-title">' + title + '</div>' +
+    '<div class="popup-address">' + address + '</div>' +
+    student +
+    link +
+    '</div>';
 }
+
+// Avança para a próxima foto ou vídeo do mesmo endereço.
 window.advanceFactoryPhoto = function(id) {
   const group = photoGroups.get(id);
   if (!group || group.photos.length < 2) return;
+
   group.index = (group.index + 1) % group.photos.length;
-  const photo = group.photos[group.index];
-  const image = document.getElementById('gallery-image-'+id);
-  const count = document.getElementById('gallery-count-'+id);
-  const student = document.getElementById('gallery-student-'+id);
-  const link = document.getElementById('gallery-link-'+id);
-  if (image) { image.src = photo.imageUrl; image.alt = 'Foto '+(group.index+1)+' de '+group.photos.length+'; clique para ver a próxima'; }
-  if (count) count.textContent = (group.index+1)+' de '+group.photos.length;
-  if (student) student.textContent = (photo.student ? 'Enviado por: '+photo.student : 'Registro fotográfico')+(photo.date ? ' · '+photo.date : '');
-  if (link) { if (photo.fileUrl) { link.href = photo.fileUrl; link.style.display = 'inline-block'; } else link.style.display = 'none'; }
+
+  const item = group.photos[group.index];
+  const mediaContainer = document.getElementById('gallery-media-' + id);
+  const count = document.getElementById('gallery-count-' + id);
+  const student = document.getElementById('gallery-student-' + id);
+  const link = document.getElementById('gallery-link-' + id);
+
+  if (mediaContainer) {
+    mediaContainer.innerHTML = mediaMarkup(
+      item,
+      id,
+      group.index,
+      group.photos.length
+    );
+  }
+
+  if (count) {
+    count.textContent = (group.index + 1) + ' de ' + group.photos.length;
+  }
+
+  if (student) {
+    student.textContent =
+      (item.student ? 'Enviado por: ' + item.student : 'Registro de aluno') +
+      (item.date ? ' · ' + item.date : '');
+  }
+
+  if (link) {
+    if (item.fileUrl) {
+      link.href = item.fileUrl;
+      link.textContent = item.tipoArquivo === 'video'
+        ? 'Abrir vídeo original ↗'
+        : 'Abrir foto original ↗';
+      link.style.display = 'inline-block';
+    } else {
+      link.style.display = 'none';
+    }
+  }
 };
 
+// Identifica o código do arquivo dentro de um link do Google Drive.
+function driveFileId(url) {
+  if (!url) return '';
+
+  const match =
+    String(url).match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+    String(url).match(/[?&]id=([a-zA-Z0-9_-]+)/);
+
+  return match ? match[1] : '';
+}
+
+// Gera o endereço de visualização de vídeos do Google Drive.
+function drivePreviewUrl(url) {
+  const id = driveFileId(url);
+  return id ? 'https://drive.google.com/file/d/' + id + '/preview' : '';
+}
+
+// Gera o endereço de miniatura para fotos do Google Drive.
 function driveImageUrl(url) {
   if (!url) return '';
-  const match = String(url).match(/\/d\/([a-zA-Z0-9_-]+)/) ||
-                String(url).match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  return match ? 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w1000' : url;
+
+  const match =
+    String(url).match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+    String(url).match(/[?&]id=([a-zA-Z0-9_-]+)/);
+
+  return match
+    ? 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w1000'
+    : url;
 }
 
+// Localiza endereços que ainda não tenham latitude e longitude.
 function geocodeAddress(address) {
   const query = address + ', São Paulo, SP, Brasil';
-  const url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&country=Brasil&q=' + encodeURIComponent(query);
-  return fetch(url, {headers:{'Accept':'application/json'}})
+
+  const url =
+    'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&country=Brasil&q=' +
+    encodeURIComponent(query);
+
+  return fetch(url, {
+    headers: {'Accept':'application/json'}
+  })
     .then(response => {
-      if (!response.ok) throw new Error('Falha na localização do endereço');
+      if (!response.ok) {
+        throw new Error('Falha na localização do endereço');
+      }
       return response.json();
     })
-    .then(results => results.length ? [Number(results[0].lat), Number(results[0].lon)] : null);
+    .then(results => {
+      return results.length
+        ? [Number(results[0].lat), Number(results[0].lon)]
+        : null;
+    });
 }
 
+// Adiciona os marcadores ao mapa e reúne os arquivos do mesmo endereço.
 function addWorkMarkers(records) {
   worksLayer.clearLayers();
   photoGroups.clear();
+
   let count = 0;
   const grouped = new Map();
+
   (Array.isArray(records) ? records : []).forEach(work => {
-    const lat = Number(work.lat), lng = Number(work.lng);
+    const lat = Number(work.lat);
+    const lng = Number(work.lng);
+
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
-    // Normalize address so differences in accents, punctuation or spacing do not split one location.
+
+    // Normaliza o endereço para reunir registros do mesmo local.
     const addressKey = String(work.address || '')
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
-    const key = addressKey ? 'addr:' + addressKey : 'coord:' + lat.toFixed(5) + ',' + lng.toFixed(5);
-    if (!grouped.has(key)) grouped.set(key, {address:work.address || '', lat, lng, photos:[]});
-    // Keep the marker even if a record's photo URL is missing; only add valid photos to the gallery.
-    if (work.imageUrl) grouped.get(key).photos.push(work);
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim()
+      .replace(/\s+/g, ' ');
+
+    const key = addressKey
+      ? 'addr:' + addressKey
+      : 'coord:' + lat.toFixed(5) + ',' + lng.toFixed(5);
+
+    if (!grouped.has(key)) {
+      grouped.set(key, {
+        address: work.address || '',
+        lat,
+        lng,
+        photos: []
+      });
+    }
+
+    // Fotos e vídeos entram na mesma galeria.
+    if (work.imageUrl || work.fileUrl) {
+      grouped.get(key).photos.push(work);
+    }
+
     count++;
   });
+
   grouped.forEach(group => {
     group.id = nextGroupId++;
     group.index = 0;
     photoGroups.set(group.id, group);
+
     const first = group.photos[0] || {};
+
     const markerContent = first.imageUrl
-      ? '<img src="'+escapeHTML(first.imageUrl)+'" alt="Miniatura da fábrica" loading="lazy" onerror="this.style.display=\'none\';this.parentNode.classList.add(\'photo-marker-fallback\')">'
-      : '<span aria-label="Fábrica" title="Fábrica">🏭</span>';
+      ? '<img src="' + escapeHTML(first.imageUrl) +
+        '" alt="Miniatura da fábrica" loading="lazy" ' +
+        'onerror="this.style.display=\'none\';this.parentNode.classList.add(\'photo-marker-fallback\')">'
+      : (
+          first.tipoArquivo === 'video'
+            ? '<span aria-label="Vídeo" title="Vídeo enviado">🎬</span>'
+            : '<span aria-label="Fábrica" title="Fábrica">🏭</span>'
+        );
+
     const icon = L.divIcon({
-      className:'photo-marker',
-      html:markerContent,
-      iconSize:[42,42], iconAnchor:[21,21], popupAnchor:[0,-20]
+      className: 'photo-marker',
+      html: markerContent,
+      iconSize: [42,42],
+      iconAnchor: [21,21],
+      popupAnchor: [0,-20]
     });
-    const marker = L.marker([group.lat,group.lng], {icon});
-    marker.bindPopup(makePopup(group), {maxWidth:430, minWidth:260}).addTo(worksLayer);
+
+    const marker = L.marker([group.lat, group.lng], {icon});
+
+    marker.bindPopup(makePopup(group), {
+      maxWidth: 430,
+      minWidth: 260
+    }).addTo(worksLayer);
   });
+
   const locations = grouped.size;
-  document.getElementById('statusText').textContent = count ? count+' registro(s) em '+locations+' endereço(s) no mapa.' : 'Nenhum trabalho carregado ainda.';
+
+  document.getElementById('statusText').textContent = count
+    ? count + ' registro(s) em ' + locations + ' endereço(s) no mapa.'
+    : 'Nenhum trabalho carregado ainda.';
+
   document.getElementById('dataNote').innerHTML = count
-    ? '<b>Trabalhos no mapa:</b> cada ponto representa um endereço. Se houver várias fotos no mesmo endereço, clique na foto aberta para avançar para a próxima.'
+    ? '<b>Trabalhos no mapa:</b> cada ponto representa um endereço. Abra o marcador para ver fotos e vídeos; use “Próximo arquivo” quando houver mais de um.'
     : '<b>Nenhum registro pôde ser posicionado.</b> Confira se a fonte de dados retornou endereços e coordenadas.';
 }
 
+// Busca os registros publicados pelo Apps Script.
 async function loadWorks() {
   if (!DATA_URL) return;
+
   const status = document.getElementById('statusText');
   status.textContent = 'Consultando os trabalhos enviados…';
+
   try {
     const response = await fetch(DATA_URL, {cache:'no-store'});
-    if (!response.ok) throw new Error('Falha ao consultar a fonte de dados');
+
+    if (!response.ok) {
+      throw new Error('Falha ao consultar a fonte de dados');
+    }
+
     const data = await response.json();
-    const records = Array.isArray(data) ? data : (data.works || data.records || []);
+    const records = Array.isArray(data)
+      ? data
+      : (data.works || data.records || []);
+
     if (!records.length) {
       addWorkMarkers([]);
       status.textContent = 'A fonte de dados não retornou registros.';
@@ -180,77 +492,160 @@ async function loadWorks() {
     }
 
     const located = [];
+
     for (const record of records) {
-      const address = String(record.endereco || record.address || '').trim();
+      const address = String(
+        record.endereco || record.address || ''
+      ).trim();
+
       if (!address) continue;
 
-      // Usa as coordenadas calculadas pelo Apps Script. Só tenta geocodificar
-      // registros antigos que ainda não tenham latitude/longitude.
+      // Usa as coordenadas do Apps Script quando disponíveis.
       let lat = Number(record.lat);
       let lng = Number(record.lng);
-      if (!Number.isFinite(lat) || !Number.isFinite(lng) || record.lat === null || record.lng === null) {
-        status.textContent = 'Localizando fábrica: ' + (record.nome || record.title || 'registro') + '…';
+
+      if (
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lng) ||
+        record.lat === null ||
+        record.lng === null
+      ) {
+        status.textContent =
+          'Localizando fábrica: ' +
+          (record.nome || record.title || 'registro') + '…';
+
         try {
           const point = await geocodeAddress(address);
+
           if (!point) continue;
+
           lat = point[0];
           lng = point[1];
         } catch (geocodeError) {
-          console.warn('Não foi possível localizar:', address, geocodeError);
+          console.warn(
+            'Não foi possível localizar:',
+            address,
+            geocodeError
+          );
           continue;
         }
+
+        // Evita fazer solicitações de geocodificação em sequência rápida.
         await new Promise(resolve => setTimeout(resolve, 1100));
       }
+
+      const fileUrl = record.foto || record.fileUrl || '';
+      const fileName = String(
+        record.arquivoNome || record.fileName || ''
+      );
+
+      const extension = fileName.includes('.')
+        ? fileName.split('.').pop().toLowerCase()
+        : '';
+
+      // Usa o tipo enviado pelo Apps Script. Para registros antigos,
+      // tenta identificar vídeos pela extensão do nome do arquivo.
+      const tipoArquivo = record.tipoArquivo ||
+        (['mp4','mov','webm'].includes(extension) ? 'video' : 'foto');
 
       located.push({
         title: record.nome || record.title || 'Fábrica sem nome',
         address,
         lat,
         lng,
-        imageUrl: driveImageUrl(record.foto || record.imageUrl || ''),
-        fileUrl: record.foto || record.fileUrl || '',
+        tipoArquivo,
+        imageUrl: tipoArquivo === 'video'
+          ? ''
+          : driveImageUrl(fileUrl || record.imageUrl || ''),
+        fileUrl,
         student: record.aluno || record.student || '',
         date: record.data || record.date || ''
       });
     }
+
     addWorkMarkers(located);
+
     if (located.length) {
-      status.textContent = located.length + ' de ' + records.length + ' registro(s) localizado(s).';
+      status.textContent =
+        located.length + ' de ' + records.length +
+        ' registro(s) localizado(s).';
     } else {
-      status.textContent = 'Os registros chegaram, mas nenhum endereço foi localizado.';
+      status.textContent =
+        'Os registros chegaram, mas nenhum endereço foi localizado.';
     }
   } catch (error) {
-    status.textContent = 'Não foi possível carregar os dados. Abra o mapa com internet e confira a implantação do Apps Script.';
+    status.textContent =
+      'Não foi possível carregar os dados. Abra o mapa com internet e confira a implantação do Apps Script.';
     console.error(error);
   }
 }
 
+// Botões para navegar pelos três bairros.
 document.querySelectorAll('[data-district]').forEach(button => {
   button.addEventListener('click', () => {
-    document.querySelectorAll('[data-district]').forEach(b => b.classList.toggle('active', b === button));
+    document.querySelectorAll('[data-district]').forEach(b => {
+      b.classList.toggle('active', b === button);
+    });
+
     const d = districts[button.dataset.district];
-    if (d.bounds) map.fitBounds(d.bounds, {padding:[18,18]});
-    else map.setView(d.center, d.zoom);
-    document.getElementById('mapHint').textContent = 'Visualizando: '+d.label;
+
+    if (d.bounds) {
+      map.fitBounds(d.bounds, {padding:[18,18]});
+    } else {
+      map.setView(d.center, d.zoom);
+    }
+
+    document.getElementById('mapHint').textContent =
+      'Visualizando: ' + d.label;
   });
 });
 
+// Busca manual de ruas e endereços.
 document.getElementById('searchForm').addEventListener('submit', async event => {
   event.preventDefault();
+
   const query = document.getElementById('addressSearch').value.trim();
   if (!query) return;
+
   const status = document.getElementById('statusText');
   status.textContent = 'Buscando endereço…';
+
   try {
-    // Geocodificação apenas sob ação explícita do usuário; restrita à cidade de São Paulo.
-    const url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&city=São%20Paulo&state=São%20Paulo&country=Brasil&q='+encodeURIComponent(query);
-    const response = await fetch(url, {headers:{'Accept':'application/json'}});
-    if (!response.ok) throw new Error('Busca indisponível');
+    const url =
+      'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&city=São%20Paulo&state=São%20Paulo&country=Brasil&q=' +
+      encodeURIComponent(query);
+
+    const response = await fetch(url, {
+      headers: {'Accept':'application/json'}
+    });
+
+    if (!response.ok) {
+      throw new Error('Busca indisponível');
+    }
+
     const results = await response.json();
-    if (!results.length) { status.textContent = 'Endereço não encontrado. Tente incluir o nome da rua e do bairro.'; return; }
-    const result = results[0], point = [Number(result.lat), Number(result.lon)];
+
+    if (!results.length) {
+      status.textContent =
+        'Endereço não encontrado. Tente incluir o nome da rua e do bairro.';
+      return;
+    }
+
+    const result = results[0];
+    const point = [Number(result.lat), Number(result.lon)];
+
     map.setView(point, 17);
-    L.popup().setLatLng(point).setContent('<b>'+escapeHTML(result.name || query)+'</b><br><span style="font-size:12px">'+escapeHTML(result.display_name || '')+'</span>').openOn(map);
+
+    L.popup()
+      .setLatLng(point)
+      .setContent(
+        '<b>' + escapeHTML(result.name || query) +
+        '</b><br><span style="font-size:12px">' +
+        escapeHTML(result.display_name || '') +
+        '</span>'
+      )
+      .openOn(map);
+
     status.textContent = 'Endereço localizado.';
   } catch (error) {
     status.textContent = 'Não foi possível pesquisar agora. Tente novamente.';
@@ -258,6 +653,7 @@ document.getElementById('searchForm').addEventListener('submit', async event => 
   }
 });
 
+// Carrega os trabalhos quando a página abre.
 loadWorks();
 </script>
 </body>
